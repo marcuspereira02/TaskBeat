@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TaskBeats</string>
+    <string name="home_title">Task Beat</string>
+    <string name="create_task_title">Criar Tarefa</string>
+    <string name="create">Criar</string>
+    <string name="update_task_title">Atualizar Tarefa</string>
+    <string name="update">Atualizar</string>
+    <string name="category_delete_title">Importante</string>
+    <string name="category_delete_description">Ao excluir uma categoria você excluirá todas as tarefas com esta categoria, tem certeza?</string>
+    <string name="delete">Deletar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="empty_category_title">Nenhuma categoria encontrada!</string>
+    <string name="empty_category_description">Por favor crie uma nova</string>
+    <string name="example_task_creation">Ex: Estudar android</string>
+    <string name="category_all">Todos</string>
+    <string name="create_category">Crie uma categoria</string>
+    <string name="create_category_example">Nome da categoria: ex: Trabalho</string>
+</resources>

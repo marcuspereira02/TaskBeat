@@ -2,18 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:padding="16dp"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_title"
+        style="@style/Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="Create Category"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:text="@string/create_category" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -26,7 +23,7 @@
             android:id="@+id/tie_category_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Category Name: e.g: Work"
+            android:hint="@string/create_category_example"
             android:minHeight="48dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -34,9 +31,11 @@
         android:id="@+id/btn_category_create"
         android:layout_width="match_parent"
         android:layout_marginStart="8dp"
+        android:backgroundTint="@color/wine"
+        android:textColor="@color/white"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:layout_height="wrap_content"
-        android:text="Create"/>
+        android:text="@string/create"/>
 
 </LinearLayout>
