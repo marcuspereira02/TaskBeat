@@ -1,6 +1,7 @@
 package com.devspace.taskbeats
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,15 +10,17 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 
 class CreateOrUpdateTaskBottomSheet(
-    private val categoryList: List<CategoryUiData>,
+    private val categoryList: List<CategoryEntity>,
     private val task: TaskUiData? = null,
     private val onCreateClicked: (TaskUiData) -> Unit,
-    private val onUpdateClicked: (TaskUiData) -> Unit
+    private val onUpdateClicked: (TaskUiData) -> Unit,
+    private val onDeleteClicked: (TaskUiData) -> Unit
 ) :
     BottomSheetDialogFragment() {
 
@@ -29,12 +32,17 @@ class CreateOrUpdateTaskBottomSheet(
         val view = inflater.inflate(R.layout.create_or_update_task_bottom_sheet, container, false)
 
         val tvTitle = view.findViewById<TextView>(R.id.tv_title)
-        val btnCreate = view.findViewById<Button>(R.id.btn_task_create)
+        val btnCreateOrUpdate = view.findViewById<Button>(R.id.btn_task_create_or_update)
+        val btnDelete = view.findViewById<Button>(R.id.btn_task_delete)
         val tieTask = view.findViewById<TextInputEditText>(R.id.tie_task_name)
         val spinner: Spinner = view.findViewById(R.id.spinner_category_list)
 
         var taskCategory: String? = null
-        val categoryStrs: List<String> = categoryList.map { it.name }
+        val categoryListTemp = mutableListOf<String>("Select")
+        categoryListTemp.addAll(
+            categoryList.map{it.name}
+        )
+        val categoryStrs: List<String> = categoryListTemp
 
         ArrayAdapter(
             requireActivity().baseContext,
@@ -56,12 +64,14 @@ class CreateOrUpdateTaskBottomSheet(
         }
 
         if (task == null) {
+            btnDelete.isVisible = false
             tvTitle.setText(R.string.create_task_title)
-            btnCreate.setText(R.string.create)
+            btnCreateOrUpdate.setText(R.string.create)
         } else {
             tvTitle.setText(R.string.update_task_title)
-            btnCreate.setText(R.string.update)
+            btnCreateOrUpdate.setText(R.string.update)
             tieTask.setText(task.name)
+            btnDelete.isVisible = true
 
             val currentCategory = categoryList.first { it.name == task.category }
             val index = categoryList.indexOf(currentCategory)
@@ -69,9 +79,9 @@ class CreateOrUpdateTaskBottomSheet(
             spinner.setSelection(index)
         }
 
-        btnCreate.setOnClickListener {
-            val name = tieTask.text.toString()
-            if (taskCategory != null) {
+        btnCreateOrUpdate.setOnClickListener {
+            val name = tieTask.text.toString().trim()
+            if (taskCategory != "Select" && name.isNotEmpty()) {
                 if (task == null) {
                     onCreateClicked.invoke(
                         TaskUiData(
@@ -91,9 +101,19 @@ class CreateOrUpdateTaskBottomSheet(
                 }
                 dismiss()
             } else {
-                Snackbar.make(btnCreate, "Please, select a category", Snackbar.LENGTH_LONG)
+                Snackbar.make(btnCreateOrUpdate, "Please, select a category", Snackbar.LENGTH_LONG)
                     .show()
             }
+        }
+
+        btnDelete.setOnClickListener {
+            if(task != null){
+                onDeleteClicked.invoke(task)
+                dismiss()
+            }else{
+                Log.d("CreateOrUpdateTaskBottomSheet" , "Task not found")
+            }
+
         }
 
         return view
