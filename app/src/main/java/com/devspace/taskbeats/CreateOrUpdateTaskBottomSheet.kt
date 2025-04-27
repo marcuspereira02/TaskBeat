@@ -38,16 +38,16 @@ class CreateOrUpdateTaskBottomSheet(
         val spinner: Spinner = view.findViewById(R.id.spinner_category_list)
 
         var taskCategory: String? = null
-        val categoryListTemp = mutableListOf<String>("Select")
+        val categoryListTemp = mutableListOf("Select")
         categoryListTemp.addAll(
-            categoryList.map{it.name}
+            categoryList.map { it.name }
         )
-        val categoryStrs: List<String> = categoryListTemp
+        val categoryStr: List<String> = categoryListTemp
 
         ArrayAdapter(
             requireActivity().baseContext,
             android.R.layout.simple_spinner_item,
-            categoryStrs
+            categoryStr
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinner.adapter = adapter
@@ -55,7 +55,7 @@ class CreateOrUpdateTaskBottomSheet(
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                taskCategory = categoryStrs[p2]
+                taskCategory = categoryStr[p2]
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -81,37 +81,48 @@ class CreateOrUpdateTaskBottomSheet(
 
         btnCreateOrUpdate.setOnClickListener {
             val name = tieTask.text.toString().trim()
-            if (taskCategory != "Select" && name.isNotEmpty()) {
-                if (task == null) {
-                    onCreateClicked.invoke(
-                        TaskUiData(
-                            id = 0,
-                            name = name,
-                            category = requireNotNull(taskCategory)
-                        )
-                    )
-                } else {
-                    onUpdateClicked.invoke(
-                        TaskUiData(
-                            id = task.id,
-                            name = name,
-                            category = requireNotNull(taskCategory)
-                        )
-                    )
-                }
-                dismiss()
+
+            if (name.isEmpty()) {
+                Snackbar.make(btnCreateOrUpdate,
+                    "Please write a task.",
+                    Snackbar.LENGTH_LONG).show()
             } else {
-                Snackbar.make(btnCreateOrUpdate, "Please, select a category", Snackbar.LENGTH_LONG)
-                    .show()
+                if (taskCategory != "Select") {
+                    if (task == null) {
+                        onCreateClicked.invoke(
+                            TaskUiData(
+                                id = 0,
+                                name = name,
+                                category = requireNotNull(taskCategory)
+                            )
+                        )
+                    } else {
+                        onUpdateClicked.invoke(
+                            TaskUiData(
+                                id = task.id,
+                                name = name,
+                                category = requireNotNull(taskCategory)
+                            )
+                        )
+                    }
+                    dismiss()
+                } else {
+                    Snackbar.make(
+                        btnCreateOrUpdate,
+                        "Please select a category",
+                        Snackbar.LENGTH_LONG
+                    )
+                        .show()
+                }
             }
         }
 
         btnDelete.setOnClickListener {
-            if(task != null){
+            if (task != null) {
                 onDeleteClicked.invoke(task)
                 dismiss()
-            }else{
-                Log.d("CreateOrUpdateTaskBottomSheet" , "Task not found")
+            } else {
+                Log.d("CreateOrUpdateTaskBottomSheet", "Task not found")
             }
 
         }

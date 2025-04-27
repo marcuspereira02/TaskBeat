@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 
 class CreateCategoryBottomSheet(private val onCreateClicked: (String) -> Unit) :
@@ -22,9 +23,15 @@ class CreateCategoryBottomSheet(private val onCreateClicked: (String) -> Unit) :
         val tieCategoryName = view.findViewById<TextInputEditText>(R.id.tie_category_name)
 
         btnCreate.setOnClickListener {
-            val name = tieCategoryName.text.toString()
-            onCreateClicked.invoke(name)
-            dismiss()
+            val name = tieCategoryName.text.toString().trim()
+
+            if (name.isNotEmpty()) {
+                onCreateClicked.invoke(name)
+                dismiss()
+            } else {
+                Snackbar.make(tieCategoryName, "Please enter a valid name.", Snackbar.LENGTH_LONG)
+                    .show()
+            }
         }
 
         return view
