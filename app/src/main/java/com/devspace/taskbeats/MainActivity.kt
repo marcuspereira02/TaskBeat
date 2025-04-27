@@ -140,7 +140,6 @@ class MainActivity : AppCompatActivity() {
             val categoryEntity = CategoryEntity(
                 name = categoryName, isSelected = false
             )
-
             insertCategory(categoryEntity)
         }
         createCategoryBottomSheet.show(supportFragmentManager, "create_category")
